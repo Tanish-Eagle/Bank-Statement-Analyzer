@@ -1,38 +1,25 @@
 package BankStatementsAnalyzer;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+import java.time.LocalDate;
+import java.time.Month;
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
+import BankStatementsAnalyzer.statementAnalyzer.StatementParser.StatementFullParser;
+import BankStatementsAnalyzer.statementAnalyzer.StatementParser.StatementParser;
+import BankStatementsAnalyzer.statementAnalyzer.StatementProcessor.Transaction.*;
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+public class AppTest {
+    private StatementParser statementParser = new StatementFullParser();
+
+    @Test
+    public void shouldParseOneCorrectLine() throws Exception {
+        String line = "30-01-2017,-50,Tesco";
+        Transaction result = statementParser.parseFrom(line);
+        Transaction expected = new Transaction(LocalDate.of(2017, Month.JANUARY, 30), -50, "Tesco");
+        Assert.assertEquals(expected.getDate(), result.getDate());
+        Assert.assertEquals(expected.getAmount(), result.getAmount(), 0.0d);
+        Assert.assertEquals(expected.getDescription(), result.getDescription());
     }
 }
